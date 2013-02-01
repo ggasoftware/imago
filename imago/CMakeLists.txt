@@ -11,5 +11,11 @@ target_link_libraries(imago ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(imago ${OpenCV_LIBS})
 target_link_libraries(imago ${Boost_LIBRARIES}) 
 
-target_link_libraries(imago debug ${INDIGO_LIBS_DBG})
-target_link_libraries(imago optimized ${INDIGO_LIBS})
+
+foreach(lib ${INDIGO_LIBS_DBG})
+	target_link_libraries(imago debug ${lib})
+endforeach()
+
+foreach(lib ${INDIGO_LIBS})
+	target_link_libraries(imago optimized ${lib})
+endforeach()
