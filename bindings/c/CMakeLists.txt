@@ -13,7 +13,7 @@ file(GLOB SRC src/*.cpp)
 file(GLOB HEADERS src/*.h)
 list(APPEND SRC ${HEADERS})
 
-#SHARED
+# Shared library
 add_library(imago_c_shared SHARED ${SRC})
 add_dependencies(imago_c_shared imago)
 target_link_libraries(imago_c_shared imago)
@@ -25,7 +25,7 @@ install(TARGETS imago_c_shared EXPORT imago DESTINATION shared/${SUBSYSTEM_PATH}
 install(FILES src/imago_c.h DESTINATION . RENAME imago.h  COMPONENT shared)
 install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION shared/${SUBSYSTEM_PATH} COMPONENT shared)
 
-#STATIC
+# Static library
 add_library(imago_c_static STATIC ${SRC})
 add_dependencies(imago_c_static imago)
 target_link_libraries(imago_c_static imago)
@@ -39,3 +39,22 @@ install(FILES src/imago_c.h DESTINATION . RENAME imago.h COMPONENT static)
 IF(MSVC)
   INSTALL (FILES ${PROJECT_BINARY_DIR}/Debug/imago_c.pdb DESTINATION static/${SUBSYSTEM_PATH} COMPONENT static CONFIGURATIONS Debug)
 ENDIF(MSVC)
+
+# Test project for static and shared library
+include_directories(${ImagoC_SOURCE_DIR}/src)
+add_executable(imago_c_test_static test/imago_c_test.c)
+target_link_libraries(imago_c_test_static imago_c_static)
+add_executable(imago_c_test_shared test/imago_c_test.c)
+target_link_libraries(imago_c_test_shared imago_c_shared)
+
+# CTest tests to verify that recognition procedure works
+add_test(imago_c_test_static_1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/0000041_rnd.png" "0000041_rnd_out.mol")
+add_test(imago_c_test_static_2 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/0000191_rnd.png" "0000191_rnd_out.mol")
+add_test(imago_c_test_static_3 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/0000230_rnd.png" "0000230_rnd_out.mol")
+add_test(imago_c_test_static_4 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/0000415_rnd.png" "0000415_rnd_out.mol")
+
+add_test(imago_c_test_shared_1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/0000041_rnd.png" "0000041_rnd_out.mol")
+add_test(imago_c_test_shared_2 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/0000191_rnd.png" "0000191_rnd_out.mol")
+add_test(imago_c_test_shared_3 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/0000230_rnd.png" "0000230_rnd_out.mol")
+add_test(imago_c_test_shared_4 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/0000415_rnd.png" "0000415_rnd_out.mol")
+

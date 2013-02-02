@@ -98,7 +98,7 @@ CEXPORT int imagoGetSessionSpecificData( void **data );
 
 /* Main recognition routine. Image must be loaded & filtered previously.
    Returns count of recognition warnings in warningsCountDataOut value (if specified) */
-CEXPORT int imagoRecognize( int *warningsCountDataOut = NULL );
+CEXPORT int imagoRecognize( int *warningsCountDataOut /* = NULL */);
 
 /* Molfile (.mol) output functions. */
 CEXPORT int imagoSaveMolToBuffer( char **buf, int *buf_size );

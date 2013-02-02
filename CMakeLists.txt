@@ -12,6 +12,8 @@ include(imago-version.cmake)
 
 message(STATUS "Subsystem: ${SUBSYSTEM_NAME}")
 
+INCLUDE(CTest)                        	
+
 add_subdirectory(imago)
 add_subdirectory(applications/imago_console)
 add_subdirectory(bindings/c)
