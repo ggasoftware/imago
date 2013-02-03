@@ -256,7 +256,7 @@ namespace machine_learning
 		{
 			result_record.average_score /= result_record.valid_count;
 			result_record.average_time /= result_record.valid_count;
-			printf("[Learning] result: %u vaild, %u ok, %g average score, %g ms average time\n",
+			printf("Result: %u vaild, %u ok, %g average score, %g ms average time\n",
 				result_record.valid_count, result_record.ok_count, 
 				result_record.average_score, result_record.average_time);
 			history.push_back(result_record);
@@ -397,10 +397,12 @@ namespace machine_learning
 		BreakIterationException() : imago::ImagoException("break") { }
 	};
 
-	int performMachineLearning(imago::Settings& vars, const strings& imageSet, const std::string& configName)
+	int performMachineLearning(imago::Settings& vars, const strings& imageSet, const std::string& configName, bool test_similarity_mode)
 	{
 		int result = 0; // ok mark
 		int timelimit_default_value = vars.general.TimeLimit;
+
+		recognition_helpers::applyConfig(true, vars, configName);
 	
 		try
 		{
@@ -410,7 +412,7 @@ namespace machine_learning
 			
 			bool progress_loaded = false;
 
-			if (readLearningProgress(base, history, true))
+			if (!test_similarity_mode && readLearningProgress(base, history, true))
 			{
 				printf("[Learning] Loaded previous progress (%u, %u)\n", base.size(), history.size());
 
@@ -435,7 +437,11 @@ namespace machine_learning
 				history.clear();
 
 				// step 0: prepare learning base
-				printf("[Learning] filling learning base for %u images\n", imageSet.size());
+				if (!test_similarity_mode)
+				{
+					printf("[Learning] filling learning base for %u images\n", imageSet.size());
+				}
+
 				for (size_t u = 0; u < imageSet.size(); u++)
 				{			
 					const std::string& file = imageSet[u];
@@ -466,7 +472,10 @@ namespace machine_learning
 				}
 				
 				// step 1: get initial results
-				printf("[Learning] getting initial results for %u images\n", base.size());
+				if (!test_similarity_mode)
+				{
+					printf("[Learning] getting initial results for %u images\n", base.size());
+				}
 		
 				int visual_counter = 0;
 				LearningResultRecord result_record;
@@ -498,6 +507,10 @@ namespace machine_learning
 
 				if (updateResult(result_record, history))
 				{
+					if (test_similarity_mode)
+					{
+						return (int)result_record.average_score;
+					}
 					storeConfig(result_record, "base");
 					storeLearningProgress(base, history);
 				}

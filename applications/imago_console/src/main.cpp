@@ -34,6 +34,7 @@ int main(int argc, char **argv)
 		printf("  -learn dir_name: process machine learning for specified collection \n");
 		printf("  -compare molfile1 molfile2: calculate similarity between molfiles \n");
 		printf("    -retcode: returns similarity 0..100 in ERRORLEVEL \n");
+		printf("  -test dir_name: calculate similarity score on specified test collection\n");
 		printf("\n OPTION SWITCHES: \n");
 		printf("  -config cfg_file: use specified configuration cluster file \n");		
 		printf("  -log: enables debug log output to ./log.html \n");
@@ -78,6 +79,7 @@ int main(int argc, char **argv)
 	bool mode_filter = false;
 	bool mode_retcode = false;
 	bool mode_test_filter_only = false;
+	bool mode_test_similarity = false;
 
 	for (int c = 1; c < argc; c++)
 	{
@@ -130,6 +132,15 @@ int main(int argc, char **argv)
 
 		else if (param == "-filter")
 			mode_test_filter_only = true;
+
+		else if (param == "-test")
+		{
+			mode_learning = true;
+			mode_recursive = true;
+			mode_filter = true;
+			mode_test_similarity = true;
+			next_arg_dir = true;
+		}
 
 		else if (param == "-override")
 			next_arg_override_cfg = true;
@@ -279,7 +290,7 @@ int main(int argc, char **argv)
 
 		if (mode_learning)
 		{			
-			return machine_learning::performMachineLearning(vars, files, config);
+			return machine_learning::performMachineLearning(vars, files, config, mode_test_similarity);
 		}
 		else // process or pass
 		{

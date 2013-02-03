@@ -31,7 +31,7 @@ namespace machine_learning
 	bool storeConfig(const LearningResultRecord& res, const std::string& prefix = "");
 	bool readLearningProgress(LearningBase& base, LearningHistory& history, bool quiet = false, const std::string& filename = "learning_progress.dat");
 	bool storeLearningProgress(const LearningBase& base, const LearningHistory& history, const std::string& filename = "learning_progress.dat");
-	int performMachineLearning(imago::Settings& vars, const strings& imageSet, const std::string& configName);
+	int performMachineLearning(imago::Settings& vars, const strings& imageSet, const std::string& configName, bool test_mode = false);
 }
 
 #endif
