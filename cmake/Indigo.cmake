@@ -26,6 +26,16 @@ if(NOT USE_SYSTEM_INDIGO)
 	include_directories(${INDIGO_INCLUDE_DIR})
 	file(GLOB INDIGO_LIBS_RELEASE "${INDIGO_LIBS_RELEASE_DIR}/*${CMAKE_STATIC_LIBRARY_SUFFIX}")
 	file(GLOB INDIGO_LIBS_DEBUG "${INDIGO_LIBS_DEBUG_DIR}/*${CMAKE_STATIC_LIBRARY_SUFFIX}")
+
+	foreach(lib ${INDIGO_LIBS_DEBUG})
+		set(Indigo_LIBRARIES ${Indigo_LIBRARIES} debug ${lib})
+	endforeach()
+	foreach(lib ${INDIGO_LIBS_RELEASE})
+		set(Indigo_LIBRARIES ${Indigo_LIBRARIES} optimized ${lib})
+	endforeach()
+
+	# To avoid problem with library order we specify them twice
+	set(Indigo_LIBRARIES ${Indigo_LIBRARIES} ${Indigo_LIBRARIES})
 else()
 	message(FATAL_ERROR "Not implemented yet!")
 endif()

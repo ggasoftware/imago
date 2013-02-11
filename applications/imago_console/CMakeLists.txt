@@ -14,7 +14,6 @@ if(UNIX AND NOT APPLE)
 	target_link_libraries(imago_console freetype fontconfig)
 endif()
 
-target_link_libraries(imago_console ${INDIGO_LIBS})
 target_link_libraries(imago_console imago)
 
 INSTALL(TARGETS imago_console DESTINATION . COMPONENT console)
