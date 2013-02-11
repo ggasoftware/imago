@@ -12,10 +12,10 @@ target_link_libraries(imago ${OpenCV_LIBS})
 target_link_libraries(imago ${Boost_LIBRARIES}) 
 
 
-foreach(lib ${INDIGO_LIBS_DBG})
+foreach(lib ${INDIGO_LIBS_DEBUG})
 	target_link_libraries(imago debug ${lib})
 endforeach()
 
-foreach(lib ${INDIGO_LIBS})
+foreach(lib ${INDIGO_LIBS_RELEASE})
 	target_link_libraries(imago optimized ${lib})
 endforeach()
