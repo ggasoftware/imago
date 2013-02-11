@@ -1,0 +1,95 @@
+<project name="imago-gui" basedir=".">
+    <property name="root" location="."/>
+    <property name="build" location="./build"/>
+    <property name="src" location="./src"/>
+    <property name="bindings_path" location="../../bindings/java"/>
+    <property name="resources" location="./resources"/>
+    <property name="launch4j.dir" location="C:/Program Files (x86)/Launch4J"/>
+    <property name="lib" location="./lib"/>
+    <property name="target" value="universal"/>
+
+    <path id="class.path">
+        <fileset dir="${lib}/">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build}/classes"/>
+    </target>
+
+    <target name="get-imago-java">
+        <ant dir="${bindings_path}" target="package-${target}" inheritAll="false"/>
+        <copy file="${bindings_path}/lib/jna.jar" todir="${lib}"/>
+        <copy file="${bindings_path}/build/imago.jar" todir="${lib}"/>
+    </target>
+
+
+    <target name="get-libs">
+        <get src="http://ggasoftware.com/downloads/repo/java/third_party/PDFRenderer.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/java/third_party/jai_core.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/java/third_party/jai_codec.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/java/indigo/${target}/indigo.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/java/indigo/${target}/indigo-renderer.jar" dest="${lib}/" skipexisting="true"/>
+    </target>
+
+    <target name="compile" depends="clean,get-imago-java,get-libs">
+        <javac srcdir="${src}"
+               destdir="${build}/classes"
+               debug="off"
+               includeantruntime="false">
+            <classpath refid="class.path"/>
+        </javac>
+    </target>
+
+    <target name="copy-resources">
+        <copy todir="${build}/classes/resources/">
+            <fileset dir="${resources}" includes="*.png"/>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile, copy-resources">
+        <jar destfile="${build}/imago-gui.jar" basedir="${build}/classes">
+            <zipgroupfileset dir="${lib}" includes="*.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="com.ggasoftware.Ego" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="launch4j" depends="jar">
+        <taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask"
+            classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
+
+        <!-- Dirty hack to fix Launch4J problem with path to its resources -->
+        <copy todir="${root}/bin">
+            <fileset dir="${launch4j.dir}/bin"/>
+        </copy>
+        <copy todir="${root}/head">
+            <fileset dir="${launch4j.dir}/head"/>
+        </copy>
+        <copy todir="${root}/w32api">
+            <fileset dir="${launch4j.dir}/w32api"/>
+        </copy>
+        <launch4j>
+            <config headerType="gui" outfile="${build}/imago-gui.exe"
+                dontWrapJar="false" jarPath="${build}/imago-gui.jar" customProcName="true">
+                <jre minVersion="1.6.0">
+                </jre>
+                <splash file="${resources}/splash.bmp"/>
+            </config>
+        </launch4j>
+        <delete dir="${root}/w32api"/>
+        <delete dir="${root}/head"/>
+        <delete dir="${root}/bin"/>
+    </target>
+
+
+    <target name="jarbundler" depends="jar">
+        <taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" />
+
+        <jarbundler dir="${build}" name="ImagoGUI" mainclass="com.ggasoftware.Ego" jar="${build}/imago-gui.jar" splashfile="${resources}/splash.bmp" />
+    </target>
+</project>

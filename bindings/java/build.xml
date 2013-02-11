@@ -1,0 +1,70 @@
+<project name="imago" basedir=".">
+    <property name="build" location="./build"/>
+    <property name="src" location="./src"/>
+    <property name="lib" location="./lib"/>
+    <property name="native_lib" location="../../dist/shared/"/>
+
+    <path id="class.path">
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build}/classes"/>
+        <mkdir dir="${lib}"/>
+    </target>
+
+    <target name="get-libs">
+        <get src="http://ggasoftware.com/downloads/repo/java/third_party/jna.jar" dest="${lib}/" skipexisting="true"/>
+    </target>
+
+    <target name="compile" depends="clean, get-libs">
+        <javac srcdir="${src}"
+               destdir="${build}/classes"
+               debug="off"
+               includeantruntime="false">
+            <classpath refid="class.path"/>
+        </javac>
+    </target>
+
+    <target name="copy-libs">
+        <copy todir="${build}/classes/com/ggasoftware/imago/${dir}">
+            <fileset dir="${native_lib}/${dir}"/>
+        </copy>
+    </target>
+
+    <target name="jar">
+        <jar destfile="${build}/imago.jar" basedir="${build}/classes"/>
+    </target>
+
+    <target name="package-universal" depends="compile">
+        <antcall target="copy-libs">
+            <param name="dir" value=""/>
+        </antcall>
+        <antcall target="jar"/>
+    </target>
+
+    <target name="package-win" depends="compile">
+        <antcall target="copy-libs">
+            <param name="dir" value="Win"/>
+        </antcall>
+        <antcall target="jar"/>
+    </target>
+
+    <target name="package-linux" depends="compile">
+        <antcall target="copy-libs">
+            <param name="dir" value="Linux"/>
+        </antcall>
+        <antcall target="jar"/>
+    </target>
+
+    <target name="package-mac" depends="compile">
+        <antcall target="copy-libs">
+            <param name="dir" value="Mac"/>
+        </antcall>
+        <antcall target="jar"/>
+    </target>
+</project>

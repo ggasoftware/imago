@@ -4,7 +4,7 @@ project(Imago)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
 
-set(LIBS_LOCATION "http://ggasoftware.com/downloads/imago_dep" CACHE STRING "URL to directory with imago third party libs")
+set(LIBS_LOCATION "http://ggasoftware.com/downloads/repo/" CACHE STRING "URL to directory with imago third party libs")
 
 include(GetSystemVersion)
 include(BuildOptions)
