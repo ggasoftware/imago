@@ -52,14 +52,19 @@ target_link_libraries(imago_c_test_static imago_c_static)
 add_executable(imago_c_test_shared test/imago_c_test.c)
 target_link_libraries(imago_c_test_shared imago_c_shared)
 
+add_executable(indigo_compare_molecules test/indigo_compare_molecules.c)
+target_link_libraries(indigo_compare_molecules ${Indigo_LIBRARIES})
+
 # CTest tests to verify that recognition procedure works
-add_test(imago_c_test_static_1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/0000041_rnd.png" "0000041_rnd_out.mol")
-add_test(imago_c_test_static_2 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/0000191_rnd.png" "0000191_rnd_out.mol")
-add_test(imago_c_test_static_3 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/0000230_rnd.png" "0000230_rnd_out.mol")
-add_test(imago_c_test_static_4 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/0000415_rnd.png" "0000415_rnd_out.mol")
+set(TEST_IMAGE_NAMES
+	0000041_rnd   0000191_rnd   0000230_rnd
+	0000415_rnd   0000603_rnd   0000931_rnd
+	0001018_rnd   0001608_rnd   0002057_rnd
+	0002708_rnd)
+foreach(img ${TEST_IMAGE_NAMES})
+	add_test(imago_c_test_static_${img} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_static "${Imago_SOURCE_DIR}/examples/${img}.png" "${img}_out_static.mol")
+	add_test(imago_c_test_static_verify_${img} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/indigo_compare_molecules "${Imago_SOURCE_DIR}/examples/${img}.mol" "${img}_out_static.mol")
 
-add_test(imago_c_test_shared_1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/0000041_rnd.png" "0000041_rnd_out.mol")
-add_test(imago_c_test_shared_2 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/0000191_rnd.png" "0000191_rnd_out.mol")
-add_test(imago_c_test_shared_3 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/0000230_rnd.png" "0000230_rnd_out.mol")
-add_test(imago_c_test_shared_4 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/0000415_rnd.png" "0000415_rnd_out.mol")
-
+	add_test(imago_c_test_shared_${img} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imago_c_test_shared "${Imago_SOURCE_DIR}/examples/${img}.png" "${img}_out_shared.mol")
+	add_test(imago_c_test_shared_verify_${img} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/indigo_compare_molecules "${Imago_SOURCE_DIR}/examples/${img}.mol" "${img}_out_shared.mol")
+endforeach()
