@@ -26,13 +26,12 @@
         <copy file="${bindings_path}/build/imago.jar" todir="${lib}"/>
     </target>
 
-
     <target name="get-libs">
-        <get src="http://ggasoftware.com/downloads/repo/java/third_party/PDFRenderer.jar" dest="${lib}/" skipexisting="true"/>
-        <get src="http://ggasoftware.com/downloads/repo/java/third_party/jai_core.jar" dest="${lib}/" skipexisting="true"/>
-        <get src="http://ggasoftware.com/downloads/repo/java/third_party/jai_codec.jar" dest="${lib}/" skipexisting="true"/>
-        <get src="http://ggasoftware.com/downloads/repo/java/indigo/${target}/indigo.jar" dest="${lib}/" skipexisting="true"/>
-        <get src="http://ggasoftware.com/downloads/repo/java/indigo/${target}/indigo-renderer.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/third_party/java/PDFRenderer.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/third_party/java/jai_core.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/third_party/java/jai_codec.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/indigo/java/${target}/indigo.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="http://ggasoftware.com/downloads/repo/indigo/java/${target}/indigo-renderer.jar" dest="${lib}/" skipexisting="true"/>
     </target>
 
     <target name="compile" depends="clean,get-imago-java,get-libs">
