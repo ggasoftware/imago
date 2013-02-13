@@ -74,7 +74,7 @@ public class ImageDocument implements Document {
 
 
                 Image scaled = origImage.getScaledInstance(newWidth, newHeight,
-                        Image.SCALE_FAST);
+                        Image.SCALE_SMOOTH);
                 image = new BufferedImage(scaled.getWidth(null), scaled.getHeight(null),
                         origImage.getType());
                 image.getGraphics().drawImage(scaled, 0, 0, null);
@@ -84,7 +84,15 @@ public class ImageDocument implements Document {
         }
 
         public BufferedImage getSelectedRectangle(Rectangle rect, ImageObserver observer) {
-            return image.getSubimage(rect.x, rect.y, rect.width, rect.height);
+        	int x = (int)Math.ceil(rect.x / scl);
+        	int y = (int)Math.ceil(rect.y / scl);
+        	int w = (int)Math.floor(rect.width / scl);
+        	int h = (int)Math.floor(rect.height / scl);
+        	if (x + w > origImage.getWidth())
+        		w = origImage.getWidth() - x;
+        	if (y + h > origImage.getHeight())
+        		h = origImage.getHeight() - y;
+            return origImage.getSubimage(x, y, w, h);
         }
 
     }
