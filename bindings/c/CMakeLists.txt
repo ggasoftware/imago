@@ -54,6 +54,9 @@ target_link_libraries(imago_c_test_shared imago_c_shared)
 
 add_executable(indigo_compare_molecules test/indigo_compare_molecules.c)
 target_link_libraries(indigo_compare_molecules ${Indigo_LIBRARIES})
+if(UNIX)
+	target_link_libraries(indigo_compare_molecules "-lstdc++ -lpthread")
+endif()
 
 # CTest tests to verify that recognition procedure works
 set(TEST_IMAGE_NAMES
