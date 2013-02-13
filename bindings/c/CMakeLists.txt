@@ -53,7 +53,7 @@ add_executable(imago_c_test_shared test/imago_c_test.c)
 target_link_libraries(imago_c_test_shared imago_c_shared)
 
 add_executable(indigo_compare_molecules test/indigo_compare_molecules.c)
-target_link_libraries(indigo_compare_molecules ${Indigo_LIBRARIES} ${Indigo_LIBRARIES})
+target_link_libraries(indigo_compare_molecules ${Indigo_LIBRARIES})
 if(UNIX)
 	target_link_libraries(indigo_compare_molecules "-lstdc++ -lpthread")
 endif()

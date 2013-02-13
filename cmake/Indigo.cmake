@@ -34,8 +34,8 @@ if(NOT USE_SYSTEM_INDIGO)
 		set(Indigo_LIBRARIES ${Indigo_LIBRARIES} optimized ${lib})
 	endforeach()
 
-	# To avoid problem with library order we specify them twice
-	set(Indigo_LIBRARIES ${Indigo_LIBRARIES} ${Indigo_LIBRARIES})
+	# To avoid problem with library order we specify them twice or even more
+	set(Indigo_LIBRARIES ${Indigo_LIBRARIES} ${Indigo_LIBRARIES} ${Indigo_LIBRARIES})
 else()
 	message(FATAL_ERROR "Not implemented yet!")
 endif()
