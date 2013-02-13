@@ -5,7 +5,7 @@ if(NOT USE_SYSTEM_OPENCV)
 	set(OpenCV_FILENAME "opencv_${SYSTEM_NAME}_${SUBSYSTEM_NAME}.zip")
 	if(NOT EXISTS ${OpenCV_DIR})
 		if(NOT EXISTS ${THIRD_PARTY_DIR}/${OpenCV_FILENAME})
-			message("Downloading OpenCV headers")
+			message("Downloading OpenCV headers from ${LIBS_LOCATION}")
 			file(DOWNLOAD ${LIBS_LOCATION}/${OpenCV_FILENAME}
 					      ${THIRD_PARTY_DIR}/${OpenCV_FILENAME} 
 					      STATUS opencv_status SHOW_PROGRESS)

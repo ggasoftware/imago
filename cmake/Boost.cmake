@@ -18,7 +18,7 @@ if(NOT USE_SYSTEM_BOOST)
 
 	if(NOT EXISTS ${BOOST_INCLUDEDIR})
 		if(NOT EXISTS ${THIRD_PARTY_DIR}/${BOOST_HEADERS_FILENAME})
-			message("Downloading Boost headers")
+			message("Downloading Boost headers from ${LIBS_LOCATION}")
 			file(DOWNLOAD ${LIBS_LOCATION}/${BOOST_HEADERS_FILENAME}
 					      ${THIRD_PARTY_DIR}/${BOOST_HEADERS_FILENAME} 
 					      STATUS boost_headers_status SHOW_PROGRESS)
@@ -33,7 +33,7 @@ if(NOT USE_SYSTEM_BOOST)
 	endif()
 	if(NOT EXISTS ${BOOST_LIBRARYDIR})
 		if(NOT EXISTS ${THIRD_PARTY_DIR}/${BOOST_LIBS_FILENAME})
-			message("Downloading boost libs")
+			message("Downloading boost libs from ${LIBS_LOCATION}")
 			file(DOWNLOAD ${LIBS_LOCATION}/${BOOST_LIBS_FILENAME}
 					      ${THIRD_PARTY_DIR}/${BOOST_LIBS_FILENAME} 
 					      STATUS boost_libs_status SHOW_PROGRESS)
