@@ -87,7 +87,8 @@ namespace imago
 			const std::string& item = split[u];
 			if (isProbable(item))
 			{
-				result *= elements.probability.at(item);
+				ChemicalValidity::Probabilities::const_iterator it = elements.probability.find(item);
+				result *= it->second;				
 			}
 			else
 			{
