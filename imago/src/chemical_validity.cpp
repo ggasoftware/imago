@@ -28,8 +28,9 @@ namespace imago
 
 	bool ChemicalValidity::isProbable(const std::string& atom) const
 	{
-		if (elements.probability.find(atom) != elements.probability.end())
-			return elements.probability.at(atom) > EPS;
+		ChemicalValidity::Probabilities::const_iterator it = elements.probability.find(atom);
+		if (it != elements.probability.end())
+			return it->second > EPS;
 		else
 			return false;
 	}
@@ -231,10 +232,11 @@ namespace imago
 		Strings split = optimalSplit(molecule, elements.names);
 		getLogExt().appendVector("split", split);
 
-		if (hacks.find(molecule) != hacks.end())
+		const HacksMap::const_iterator hacks_it = hacks.find(molecule);
+		if (hacks_it != hacks.end())
 		{
 			getLogExt().append("Found predefined hack for", molecule);
-			sa = hacks.at(molecule);
+			sa = hacks_it->second;
 			return;
 		}
 				
