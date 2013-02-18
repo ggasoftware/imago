@@ -97,6 +97,6 @@
         <taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" classpath="${jarbundler.dir}/jarbundler.jar"/>
 
         <jarbundler dir="${build}" name="ImagoGUI" mainclass="com.ggasoftware.Ego" jar="${build}/imago-gui.jar" splashfile="${resources}/splash.bmp" />
-        <zip destfile="${dist}/imago-gui-mac.zip" basedir="${build}" includes="ImagoGUI.app"/>
+        <zip destfile="${dist}/imago-gui-mac.zip" basedir="${build}" includes="ImagoGUI.app/**/*"/>
     </target>
 </project>
