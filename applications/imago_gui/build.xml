@@ -5,6 +5,7 @@
     <property name="bindings_path" location="../../bindings/java"/>
     <property name="resources" location="./resources"/>
     <property name="launch4j.dir" location="C:/Program Files (x86)/Launch4J"/>
+    <property name="jarbundler.dir" location="C:/Program Files (x86)/JarBundler"/>
     <property name="lib" location="./lib"/>
     <property name="target" value="universal"/>
 
@@ -87,7 +88,7 @@
 
 
     <target name="jarbundler" depends="jar">
-        <taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" />
+        <taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" classpath="${jarbundler.dir}/jarbundler.jar"/>
 
         <jarbundler dir="${build}" name="ImagoGUI" mainclass="com.ggasoftware.Ego" jar="${build}/imago-gui.jar" splashfile="${resources}/splash.bmp" />
     </target>
