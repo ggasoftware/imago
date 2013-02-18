@@ -3,6 +3,7 @@
     <property name="build" location="./build"/>
     <property name="src" location="./src"/>
     <property name="bindings_path" location="../../bindings/java"/>
+    <property name="dist" location="../../dist"/>
     <property name="resources" location="./resources"/>
     <property name="launch4j.dir" location="C:/Program Files (x86)/Launch4J"/>
     <property name="jarbundler.dir" location="C:/Program Files (x86)/JarBundler"/>
@@ -58,6 +59,7 @@
                 <attribute name="Main-Class" value="com.ggasoftware.Ego" />
             </manifest>
         </jar>
+        <zip destfile="${dist}/imago-gui-${target}.zip" basedir="${build}" includes="imago-gui.jar"/>
     </target>
 
     <target name="launch4j" depends="jar">
@@ -82,6 +84,9 @@
                 <splash file="${resources}/splash.bmp"/>
             </config>
         </launch4j>
+        <copy todir="${dist}">
+            <fileset dir="${build}" includes="imago-gui.exe"/>
+        </copy>
         <delete dir="${root}/w32api"/>
         <delete dir="${root}/head"/>
         <delete dir="${root}/bin"/>
@@ -92,5 +97,6 @@
         <taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" classpath="${jarbundler.dir}/jarbundler.jar"/>
 
         <jarbundler dir="${build}" name="ImagoGUI" mainclass="com.ggasoftware.Ego" jar="${build}/imago-gui.jar" splashfile="${resources}/splash.bmp" />
+        <zip destfile="${dist}/imago-gui-mac.zip" basedir="${build}" includes="ImagoGUI.app"/>
     </target>
 </project>
