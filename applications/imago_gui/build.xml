@@ -8,6 +8,7 @@
     <property name="jarbundler.dir" location="C:/Program Files (x86)/JarBundler"/>
     <property name="lib" location="./lib"/>
     <property name="target" value="universal"/>
+    <property name="repo" value="http://ggasoftware.com/downloads/repo"/>
 
     <path id="class.path">
         <fileset dir="${lib}/">
@@ -28,11 +29,11 @@
     </target>
 
     <target name="get-libs">
-        <get src="http://ggasoftware.com/downloads/repo/third_party/java/PDFRenderer.jar" dest="${lib}/" skipexisting="true"/>
-        <get src="http://ggasoftware.com/downloads/repo/third_party/java/jai_core.jar" dest="${lib}/" skipexisting="true"/>
-        <get src="http://ggasoftware.com/downloads/repo/third_party/java/jai_codec.jar" dest="${lib}/" skipexisting="true"/>
-        <get src="http://ggasoftware.com/downloads/repo/indigo/java/${target}/indigo.jar" dest="${lib}/" skipexisting="true"/>
-        <get src="http://ggasoftware.com/downloads/repo/indigo/java/${target}/indigo-renderer.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="${repo}/third_party/java/PDFRenderer.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="${repo}/third_party/java/jai_core.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="${repo}/third_party/java/jai_codec.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="${repo}/indigo/java/${target}/indigo.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="${repo}/indigo/java/${target}/indigo-renderer.jar" dest="${lib}/" skipexisting="true"/>
     </target>
 
     <target name="compile" depends="clean,get-imago-java,get-libs">

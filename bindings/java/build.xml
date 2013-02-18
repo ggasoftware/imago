@@ -3,6 +3,7 @@
     <property name="src" location="./src"/>
     <property name="lib" location="./lib"/>
     <property name="native_lib" location="../../dist/shared/"/>
+    <property name="repo" value="http://ggasoftware.com/downloads/repo"/>
 
     <path id="class.path">
         <fileset dir="${lib}">
@@ -18,7 +19,7 @@
     </target>
 
     <target name="get-libs">
-        <get src="http://ggasoftware.com/downloads/repo/third_party/java/jna.jar" dest="${lib}/" skipexisting="true"/>
+        <get src="${repo}/third_party/java/jna.jar" dest="${lib}/" skipexisting="true"/>
     </target>
 
     <target name="compile" depends="clean, get-libs">

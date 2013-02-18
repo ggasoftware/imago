@@ -430,46 +430,67 @@ public class Imago {
         }
     }
 
-    private static String getDllPath() {
-        String path = "";
-        switch (_os) {
-            case OS_WINDOWS:
-                path += "Win";
-                break;
-            case OS_LINUX:
-                path += "Linux";
-                break;
-            case OS_MACOS:
-                path += "Mac";
-                break;
-            default:
-                throw new Error("OS not set");
-        }
-        path += "/";
+   private static String getDllPath ()
+   {
+      String path = "";
+      switch (_os)
+      {
+         case OS_WINDOWS:
+            path += "Win";
+            break;
+         case OS_LINUX:
+            path += "Linux";
+            break;
+         case OS_SOLARIS:
+            path += "Sun";
+            break;
+         case OS_MACOS:
+            path += "Mac";
+            break;
+         default:
+            throw new Error("OS not set");
+      }
+      path += "/";
 
-        if (_os == OS_MACOS) {
-            String version = System.getProperty("os.version");
+      if (_os == OS_MACOS)
+      {
+         String version = System.getProperty("os.version");
+         int minorVersion = Integer.parseInt(version.split("\\.")[1]);
+         Integer usingVersion = null;
 
-            if (version.startsWith("10.5")) {
-                path += "10.5";
-            } else if (version.startsWith("10.6") || version.startsWith("10.7") || version.startsWith("10.8")) {
-                path += "10.6";
-            } else {
-                throw new Error("OS version not supported");
+         for (int i = minorVersion; i >= 5; i--) {
+            if (Imago.class.getResourceAsStream("/com/ggasoftware/indigo/" + path + "10." + i) != null) {
+               usingVersion = i;
+               break;
             }
-        } else {
-            String archstr = System.getProperty("os.arch");
-            if (archstr.equals("x86") || archstr.equals("i386")) {
-                path += "x86";
-            } else if (archstr.equals("x86_64") || archstr.equals("amd64")) {
-                path += "x64";
-            } else {
-                throw new Error("architecture not recognized");
-            }
-        }
+         }
+         if (usingVersion == null) {
+            throw new Error("OS version not supported: Mac OS X 10." + minorVersion);  
+         }
+         path += "10." + usingVersion;
+      }
+      else if (_os == OS_SOLARIS)
+      {
+         String model = System.getProperty("sun.arch.data.model");
 
-        return path;
-    }
+         if (model.equals("32"))
+            path += "sparc32";
+         else
+            path += "sparc64";
+      }
+      else
+      {
+          String archstr = System.getProperty("os.arch");
+          if (archstr.equals("x86") || archstr.equals("i386"))
+               path += "x86";
+          else if (archstr.equals("x86_64") || archstr.equals("amd64"))
+               path += "x64";
+          else
+              throw new Error("architecture not recognized");
+      }
+
+      return path;
+   }
 
     static {
         _os = getOs();
