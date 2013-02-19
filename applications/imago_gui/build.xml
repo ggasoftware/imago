@@ -109,8 +109,21 @@
 
     <target name="jarbundler" depends="jar">
         <taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" classpath="${jarbundler.dir}/jarbundler.jar"/>
-
-        <jarbundler dir="${build}" name="ImagoGUI" mainclass="com.ggasoftware.Ego" jar="${build}/imago-gui.jar" splashfile="${resources}/splash.bmp" />
-        <zip destfile="${dist}/imago-gui-${version}-mac-app.zip" basedir="${build}" includes="ImagoGUI.app/**/*"/>
+        <mkdir dir="${build}/ImagoGUI"/>
+        <jarbundler dir="${build}/ImagoGUI" name="ImagoGUI" mainclass="com.ggasoftware.Ego" jar="${build}/imago-gui.jar" splashfile="${resources}/splash.bmp" />
+        <exec executable="ln">
+            <arg value="-s"/>
+            <arg value="/Applications"/>
+            <arg value="${build}/ImagoGUI/Applications"/>
+        </exec>
+        <exec executable="hdiutil">
+            <arg line="create ${build}/ImagoGUITmp.dmg -ov -volname ImagoGUI -fs HFS+ -srcfolder ${build}/ImagoGUI"/>
+        </exec>
+        <exec executable="hdiutil">
+            <arg line="convert ${build}/ImagoGUITmp.dmg -format UDZO -o ${build}/ImagoGUI-${version}.dmg"/>
+        </exec>
+        <copy todir="${dist}">
+            <fileset dir="${build}" includes="ImagoGUI-${version}.dmg"/>
+        </copy>
     </target>
 </project>
