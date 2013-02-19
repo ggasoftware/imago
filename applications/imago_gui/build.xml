@@ -73,6 +73,7 @@
             <zipgroupfileset dir="${lib}" includes="*.jar" />
             <manifest>
                 <attribute name="Main-Class" value="com.ggasoftware.Ego" />
+                <attribute name="SplashScreen-Image" value="resources/splash.png" />
             </manifest>
         </jar>
         <zip destfile="${dist}/imago-gui-${version}-${target}.zip" basedir="${build}" includes="imago-gui.jar"/>
