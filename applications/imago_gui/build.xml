@@ -3,6 +3,7 @@
     <property name="build" location="./build"/>
     <property name="src" location="./src"/>
     <property name="bindings_path" location="../../bindings/java"/>
+    <property name="imago_root" location="../.."/>
     <property name="dist" location="../../dist"/>
     <property name="resources" location="./resources"/>
     <property name="launch4j.dir" location="C:/Program Files (x86)/Launch4J"/>
@@ -52,14 +53,29 @@
         </copy>
     </target>
 
-    <target name="jar" depends="compile, copy-resources">
+    <target name="get-version">
+        <loadfile srcfile="${imago_root}/imago-version.cmake" property="version">
+            <filterchain>
+                <linecontains>
+                    <contains value="SET(IMAGO_VERSION &quot;"/>
+                    </linecontains>
+                    <striplinebreaks/>
+                    <tokenfilter>
+                        <replacestring from="SET(IMAGO_VERSION &quot;" to=""/>
+                        <replacestring from="&quot;)" to=""/>
+                    </tokenfilter>
+                </filterchain>
+        </loadfile>
+    </target>
+
+    <target name="jar" depends="compile, copy-resources, get-version">
         <jar destfile="${build}/imago-gui.jar" basedir="${build}/classes">
             <zipgroupfileset dir="${lib}" includes="*.jar" />
             <manifest>
                 <attribute name="Main-Class" value="com.ggasoftware.Ego" />
             </manifest>
         </jar>
-        <zip destfile="${dist}/imago-gui-${target}.zip" basedir="${build}" includes="imago-gui.jar"/>
+        <zip destfile="${dist}/imago-gui-${version}-${target}.zip" basedir="${build}" includes="imago-gui.jar"/>
     </target>
 
     <target name="launch4j" depends="jar">
@@ -97,6 +113,6 @@
         <taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" classpath="${jarbundler.dir}/jarbundler.jar"/>
 
         <jarbundler dir="${build}" name="ImagoGUI" mainclass="com.ggasoftware.Ego" jar="${build}/imago-gui.jar" splashfile="${resources}/splash.bmp" />
-        <zip destfile="${dist}/imago-gui-mac.zip" basedir="${build}" includes="ImagoGUI.app/**/*"/>
+        <zip destfile="${dist}/imago-gui-${version}-mac.zip" basedir="${build}" includes="ImagoGUI.app/**/*"/>
     </target>
 </project>
