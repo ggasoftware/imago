@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.6)
 
 project(ImagoGUI)
 
+include(../../imago-version.cmake)
+
 install(FILES "build/imago-gui.exe" DESTINATION "bin" COMPONENT bin)
 
 FILE(GLOB EXAMPLES "${CMAKE_CURRENT_SOURCE_DIR}/../../examples/*.*")
@@ -9,10 +11,9 @@ foreach(f ${EXAMPLES})
 	install(FILES "${f}" DESTINATION "examples" COMPONENT examples)
 endforeach()
 
-set(IMAGO_VERSION "2.0")
 set(CPACK_PACKAGE_VENDOR "GGA Software Services LLC")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Imago GUI")
-set(CPACK_PACKAGE_VERSION "2.0.0")
+set(CPACK_PACKAGE_VERSION ${IMAGO_VERSION})
 set(CPACK_PACKAGE_VERSION_MAJOR "2")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
