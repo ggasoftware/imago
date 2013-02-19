@@ -2,7 +2,9 @@
     <property name="build" location="./build"/>
     <property name="src" location="./src"/>
     <property name="lib" location="./lib"/>
+    <property name="dist" location="../../dist/release"/>
     <property name="native_lib" location="../../dist/shared/"/>
+    <property name="imago_root" location="../.."/>
     <property name="repo" value="http://ggasoftware.com/downloads/repo"/>
 
     <path id="class.path">
@@ -37,8 +39,24 @@
         </copy>
     </target>
 
-    <target name="jar">
+    <target name="get-version">
+        <loadfile srcfile="${imago_root}/imago-version.cmake" property="version">
+            <filterchain>
+                <linecontains>
+                    <contains value="SET(IMAGO_VERSION &quot;"/>
+                    </linecontains>
+                    <striplinebreaks/>
+                    <tokenfilter>
+                        <replacestring from="SET(IMAGO_VERSION &quot;" to=""/>
+                        <replacestring from="&quot;)" to=""/>
+                    </tokenfilter>
+                </filterchain>
+        </loadfile>
+    </target>
+
+    <target name="jar" depends="get-version">
         <jar destfile="${build}/imago.jar" basedir="${build}/classes"/>
+        <zip destfile="${dist}/imago-java-${version}-${target}.zip" basedir="${build}" includes="imago.jar"/>
     </target>
 
     <target name="package-universal" depends="compile">
