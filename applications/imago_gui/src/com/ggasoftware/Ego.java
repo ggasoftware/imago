@@ -8,6 +8,7 @@ import com.ggasoftware.imago.Imago;
 import com.ggasoftware.imago.ImagoException;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -19,6 +20,8 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
+
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -37,7 +40,11 @@ public class Ego {
     private OpenSketcherDialog osd;
 
     public Ego(String filename) {
-        frame = new EgoFrame("Ego");
+        frame = new EgoFrame("Imago OCR Visual Tool");
+        
+        Image icon = new ImageIcon(getClass().getResource("/resources/imago-icon.png")).getImage();
+        frame.setIconImage(icon);
+        
         setActions();
         if (filename != null) {
             setFile(new File(filename));

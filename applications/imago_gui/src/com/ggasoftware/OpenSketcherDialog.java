@@ -22,12 +22,13 @@ public class OpenSketcherDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setTitle("Open molecule in sketcher");
+        setTitle("Open molecule in a molecule editor");
         pack();
 
         ButtonGroup bg = new ButtonGroup();
         bg.add(stdinRadioButton);
         bg.add(commandLineRadioButton);
+        commandLineRadioButton.setSelected(true);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -80,9 +81,14 @@ public class OpenSketcherDialog extends JDialog {
             String commandLine = commandLineField.getText();
 
             if (commandLineRadioButton.isSelected()) {
-                commandLine = commandLine + " " + molecule;
+                File tempMol = File.createTempFile("imago", ".mol");
+                FileWriter fstream = new FileWriter(tempMol);
+                fstream.write(molecule);
+                fstream.close();
+                
+                commandLine = commandLine + " " + tempMol.getAbsolutePath();
             }
-
+            
             Process p = runtime.exec(commandLine);
 
             if (stdinRadioButton.isSelected()) {

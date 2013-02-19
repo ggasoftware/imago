@@ -153,7 +153,7 @@ public class MenuBuilder  {
 
         ef.jSketcherMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
         ef.jSketcherMenuItem.setMnemonic('M');
-        ef.jSketcherMenuItem.setText("Open in MarvinSketch");
+        ef.jSketcherMenuItem.setText("Open in a molecule editor");
         ef.jSketcherMenuItem.setEnabled(false);
         ef.jMoleculeMenu.add(ef.jSketcherMenuItem);
     }
