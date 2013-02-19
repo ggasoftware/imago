@@ -4,7 +4,7 @@
     <property name="src" location="./src"/>
     <property name="bindings_path" location="../../bindings/java"/>
     <property name="imago_root" location="../.."/>
-    <property name="dist" location="../../dist"/>
+    <property name="dist" location="../../dist/release"/>
     <property name="resources" location="./resources"/>
     <property name="launch4j.dir" location="C:/Program Files (x86)/Launch4J"/>
     <property name="jarbundler.dir" location="C:/Program Files (x86)/JarBundler"/>
