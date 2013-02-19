@@ -349,13 +349,13 @@ public class DocumentPanel extends javax.swing.JPanel {
         }
 
         public void recoverPreviousDocument() {
+            parent.jZoomComboBox.setSelectedItem(
+                String.valueOf((float)(getScale() * 100)) + "%");
+
             currentPage = parent.document.getPage(parent.curPage, this);
             prepPage(saved_scale);
             viewPage(currentPage);
             parent.parent.toggleAfterSelectionItems(false);
-
-            parent.jZoomComboBox.setSelectedItem(
-                String.valueOf((float)(getScale() * 100)) + "%");
         }
 
         public void mouseClicked(MouseEvent me) {

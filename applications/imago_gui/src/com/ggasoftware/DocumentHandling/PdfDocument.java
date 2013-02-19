@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -103,18 +104,43 @@ public class PdfDocument implements Document {
 
         public BufferedImage getSelectedRectangle(Rectangle rect,
                 ImageObserver observer) {
-            //TODO: rect acts like it's passed as reference
-            /*Rectangle clip = new Rectangle(rect);
-            clip.x /= scale;
-            clip.y /= scale;
-            clip.width /= scale;
-            clip.height /= scale;
+            double cx, cy, cw, ch;
+            cx = rect.x / scale;
+            cy = rect.y / scale;
+            cw = rect.width / scale;
+            ch = rect.height / scale;
+            
+            cy = page.getHeight() - cy - ch;
+            Rectangle2D.Double clip = new Rectangle2D.Double(cx, cy, cw, ch);
 
-            clip.y = (int)page.getHeight() - clip.y - clip.height;
-            return (BufferedImage)page.getImage(rect.width, rect.height, clip,
-                    observer);
-            */
-            return image.getSubimage(rect.x, rect.y, rect.width, rect.height);
+            int w, h;
+            
+            if (cw > ch)
+            {
+                w = 1024;
+                h = (int)(ch * w / cw);
+            }
+            else
+            {
+                h = 768;
+                w = (int)(cw * h / ch);
+            }
+            
+            loadingFinished = false;
+            
+            Image img = page.getImage(w, h, clip, this);
+            
+            while(!loadingFinished) {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {}
+            }
+
+            BufferedImage image2 = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            image2.getGraphics().drawImage(img, 0, 0, observer);
+            
+            return image2;
+            
         }
     }
 
