@@ -99,10 +99,7 @@
                 </jre>
                 <splash file="${resources}/splash.bmp"/>
             </config>
-        </launch4j>
-        <copy todir="${dist}">
-            <fileset dir="${build}" includes="imago-gui.exe"/>
-        </copy>
+        </launch4j>         
         <delete dir="${root}/w32api"/>
         <delete dir="${root}/head"/>
         <delete dir="${root}/bin"/>
