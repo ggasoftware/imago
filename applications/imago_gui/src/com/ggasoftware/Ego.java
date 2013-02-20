@@ -6,6 +6,7 @@ import com.ggasoftware.DocumentHandling.PdfDocument;
 import com.ggasoftware.DocumentHandling.TiffDocument;
 import com.ggasoftware.imago.Imago;
 import com.ggasoftware.imago.ImagoException;
+import com.ggasoftware.MessageBox;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -20,6 +21,7 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -39,8 +41,10 @@ public class Ego {
     private String logTempDir = null;
     private OpenSketcherDialog osd;
 
+    private static String title = "Imago OCR Visual Tool";
+    
     public Ego(String filename) {
-        frame = new EgoFrame("Imago OCR Visual Tool");
+        frame = new EgoFrame(title);
         
         Image icon = new ImageIcon(getClass().getResource("/resources/imago-icon.png")).getImage();
         frame.setIconImage(icon);
@@ -108,7 +112,7 @@ public class Ego {
         frame.toggleAfterRecognitionItems(false);
         frame.toggleAfterSelectionItems(false);
         frame.toggleNavigateItems(true);
-        frame.setTitle("Ego: " + file.getName());
+        frame.setTitle(title + ": " + file.getName());
         frame.toggleRecognizeItems(true);
         frame.jDocumentPanel.setCareful();
 
@@ -278,6 +282,19 @@ public class Ego {
         a = systemClipboard.getContents(null);
     }
     
+    public void showAboutDialog ()
+    {
+       StringBuilder sb = new StringBuilder();
+       sb.append(String.format("<b>Imago OCR Visual Tool</b><br>"));
+       sb.append(String.format("Imago version: %s<br>", imago.getVersion()));
+       sb.append("(C) 2009-2013 GGA Software Services LLC<br>");
+       String url = "http://ggasoftware.com/opensource/imago";
+       sb.append(String.format("<a href=\"%s\">%s</a>", url, url));
+       
+       ImageIcon icon = new ImageIcon(getClass().getResource("/resources/gga-logo.png"));
+       MessageBox.showHtml(this.frame, sb.toString(), "About", icon);
+    }
+    
     public final void setActions() {
         ActionListener openAction = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -388,6 +405,12 @@ public class Ego {
             }
         });
 
+        frame.jAboutMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showAboutDialog();
+            }
+        });
+        
         frame.jPreviousDocumentMenuItem.addActionListener(previousDocumentAction);
         frame.jSketcherMenuItem.addActionListener(sketcherAction);
     }

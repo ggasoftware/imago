@@ -158,16 +158,31 @@ public class MenuBuilder  {
         ef.jMoleculeMenu.add(ef.jSketcherMenuItem);
     }
     
+    private void buildHelpMenu() {
+        ef.jHelpMenu = new JMenu();
+        ef.jAboutMenuItem = new JMenuItem();
+        
+        ef.jHelpMenu.setMnemonic('H');
+        ef.jHelpMenu.setText("Help");
+
+        ef.jAboutMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        ef.jAboutMenuItem.setMnemonic('A');
+        ef.jAboutMenuItem.setText("About");
+        ef.jHelpMenu.add(ef.jAboutMenuItem);
+    }
+    
     public void build() {
         ef.jMainMenuBar = new JMenuBar();
         
         buildFileMenu();
         buildViewMenu();
         buildMoleculeMenu();
+        buildHelpMenu();
         
         ef.jMainMenuBar.add(ef.jFileMenu);
         ef.jMainMenuBar.add(ef.jViewMenu);
         ef.jMainMenuBar.add(ef.jMoleculeMenu);
+        ef.jMainMenuBar.add(ef.jHelpMenu);
         ef.setJMenuBar(ef.jMainMenuBar);
     }
 }

@@ -49,4 +49,7 @@ public class EgoForm extends JFrame {
     protected javax.swing.JMenu jZoomMenu;
     protected javax.swing.JMenuItem jZoomOutMenuItem;
     protected javax.swing.JMenuItem jZoomInMenuItem;
+    
+    protected javax.swing.JMenu jHelpMenu;
+    protected javax.swing.JMenuItem jAboutMenuItem;
 }
