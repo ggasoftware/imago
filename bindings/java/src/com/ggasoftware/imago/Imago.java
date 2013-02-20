@@ -459,7 +459,7 @@ public class Imago {
          Integer usingVersion = null;
 
          for (int i = minorVersion; i >= 5; i--) {
-            if (Imago.class.getResourceAsStream("/com/ggasoftware/indigo/" + path + "10." + i) != null) {
+            if (Imago.class.getResourceAsStream("/com/ggasoftware/imago/" + path + "10." + i) != null) {
                usingVersion = i;
                break;
             }
