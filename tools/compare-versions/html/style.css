@@ -1,0 +1,52 @@
+.correct {background-color: #AAFFAA }
+.almostcorrect {background-color: #BBFFD5 }
+.inter {background-color: #CCCCFF }
+.bad {background-color: #FFAAAA }
+
+.level-1 {text-indent:0em}
+.level0 {text-indent:0em}
+.level1 {text-indent:2em}
+.level2 {text-indent:4em}
+.level3 {text-indent:6em}
+.group {font-weight:bold;}
+.better {}
+.stat {background-color: #eef; color: #222;}
+
+.rowsame {}
+.rowalmostcorrect {}
+.rowcorrect { }
+
+.molref { color: #777;opacity:0.5;text-decoration: none }
+
+.gal {}
+
+.portion { color: #777;opacity:0.3;font-size:70% }
+
+#slider { width:500px; font-size: 62.5%; display:inline-block }
+
+.headerlink { font-size:70%; font-weight:normal; }
+
+.inline { display:inline-block }
+
+#score-range { border:0; color:#2E6E9E; font-weight:bold; background: #fff; }
+
+.input[type="text"]:disabled { background: #ccc; }
+
+.ui-slider .ui-slider-horizontal { height: .1em !important; }
+
+.toc li { margin: 8px 0px; }
+
+#summary .leftheader { font-weight:bold; }
+
+.spinner {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-left: -50px; /* half width of the spinner gif */
+	margin-top: -50px; /* half height of the spinner gif */
+	text-align:center;
+	z-index:1234;
+	overflow: auto;
+	width: 100px; /* width of the spinner gif */
+	height: 102px; /*hight of the spinner gif +2px to fix IE8 issue */
+}

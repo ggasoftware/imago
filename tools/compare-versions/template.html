@@ -1,0 +1,341 @@
+<html>
+<head>
+ 
+<script src="html/jquery.min.js"></script>
+<script type="text/javascript" src="html/jquery.colorbox.js"></script>
+<script type="text/javascript" src="html/jquery-ui.custom.min.js"></script>
+<link rel="stylesheet" type="text/css" href="html/colorbox.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="html/redmond/jquery-ui-1.8.24.custom.css" />
+<link rel="stylesheet" type="text/css" href="html/style.css" media="screen" />
+
+<script type="text/javascript">
+$JS$
+
+var needUpdateImageGallery = false;
+
+function updateImageGallery (objects)
+{
+	$.colorbox.remove();
+	needUpdateImageGallery = true;
+}
+
+function ensureImageGalleryUpdated (objects)
+{
+	if (needUpdateImageGallery)
+	{
+		$('.gal:visible').colorbox({
+			returnFocus:false,
+			rel:'gal',
+			width:'90%',
+			height:'90%',
+			transition:"none",
+			title: function() {
+				var id = $(this).attr('id');
+				var molid = 'm' + id.substring(1);
+				var molref = $("#" + molid);
+				return $(this).attr('title') + "  " + '<a href=' + molref.attr('href') + ' download>mol</a>';
+			},
+			onComplete:function() {
+				$(this).focus();
+			}
+		});
+		needUpdateImageGallery = false;
+	}
+}
+
+$(function() {
+	$('#slider').slider({
+		range: true,
+		min: 0,
+		max: 100,
+		values: [0, 100],
+		slide: function( event, ui ) {
+						$( "#score-range" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+					},
+		change: function(event, ui) { onFilterColumnOptions(); }
+	});
+	$( "#score-range" ).val($( "#slider" ).slider( "values", 0 ) + " - " + $( "#slider" ).slider( "values", 1 ) );
+	
+	var filterColumnId = $('#filterColumnId');
+	var compareColumnId1 = $('#compareColumnId1');
+	var compareColumnId2 = $('#compareColumnId2');
+	$.each(versionNames, function(val, text) {
+		filterColumnId.append($('<option></option>').val(val).html(text));
+		compareColumnId1.append($('<option></option>').val(val).html(text));
+		compareColumnId2.append($('<option></option>').val(val).html(text));
+	});
+	
+	filterColumnId.get(0).selectedIndex = nVersions - 1;
+	compareColumnId1.get(0).selectedIndex = nVersions - 2;
+	compareColumnId2.get(0).selectedIndex = nVersions - 1;
+	
+	updateImageGallery();
+
+	// Lazy colorbox initialization
+	$('.gal').click(function(event) {
+		// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
+		// See: http://jacklmoore.com/notes/click-events/
+		if (!(event.which > 1 || event.shiftKey || event.altKey || event.metaKey)) { 
+			if (needUpdateImageGallery)
+			{
+				event.preventDefault();
+				$('#spinner').show();
+				event.preventDefault();
+				setTimeout(function() {
+					ensureImageGalleryUpdated();
+					$('#spinner').hide();
+					setTimeout(function() {
+						$("#" + event.target.id).colorbox({open:true});
+					}, 0);
+				}, 100);
+			}
+		}
+	});
+	
+	$('#spinner').hide();
+	
+	var container = $('#hideColumnsContainer');
+	for(i=0; i<versions.length; i++)
+	{
+		var id = 'hide' + versions[i];
+		container.append('<input type="checkbox" id="' + id + '" onclick="onHideColumns()">' + versionNames[versions[i]] + '</input>');
+	}
+	
+	$('#hideReference').prop('checked', true);
+	hideColumns();
+});
+
+function onFilter ()
+{
+	$('#spinner').show();
+	setTimeout(onFilterFunc, 50);
+}
+
+function onFilterFunc ()
+{
+	$(".row").css('display', '');
+	hideOnFilter();
+	hideOnCompare();
+	hideColumns();
+	updateImageGallery();
+
+	$('#spinner').hide();
+}
+
+function onCompareOptions ()
+{
+	if ($('#compareColumns').is(':checked'))
+		onFilter();
+}
+
+function onFilterColumnOptions ()
+{
+	if ($('#filterColumn').is(':checked'))
+		onFilter();
+}
+
+function onHideColumns ()
+{
+	onFilter();
+}
+
+function hideCss (checkId, css, onVisible)
+{
+	var display;
+	if ($(checkId).is(':checked'))
+		display = 'none';
+	else
+		display = onVisible;
+	$(css).css('display', display);
+}
+
+function hideColumns ()
+{
+	hideCss('#hideReference', '.ref', 'inline')
+	
+	for(i=0; i<versions.length; i++)
+	{
+		var cb = '#hide' + versions[i];
+		var cls = "." + versions[i];
+		if ($(cb).is(':checked'))
+			$(cls).css('display', 'none');
+	}
+}
+
+function hideOnCompare ()
+{
+	var display;
+	if ($('#compareColumns').is(':checked'))
+		display = 'none';
+	else
+		display = 'table-cell';
+		
+	for(i=0; i<versions.length; i++)
+	{
+		var cls = "." + versions[i];
+		$(cls).css('display', display);
+	}
+	if (!$('#compareColumns').is(':checked'))
+		return;
+		
+	var cls = "." + $('#compareColumnId1').val();
+	$(cls).css('display', 'table-cell');
+	cls = "." + $('#compareColumnId2').val();
+	$(cls).css('display', 'table-cell');
+	
+	var idx1 = $('#compareColumnId1').prop("selectedIndex");
+	var idx2 = $('#compareColumnId2').prop("selectedIndex");
+	var compareOp = $('#compareShow').val();
+	
+	if (compareOp != '~') {
+		for(i=0; i<scores.length; i++)
+		{
+			var s1 = scores[i][1][idx1];
+			var s2 = scores[i][1][idx2];
+			
+			var hide = false;
+			if (compareOp == '=' && s1 != s2)
+				hide = true;
+			if (compareOp == '>' && s1 <= s2)
+				hide = true;
+			if (compareOp == '<' && s1 >= s2)
+				hide = true;
+			
+			if (hide)
+				$("#" + scores[i][0]).css('display', 'none');
+		}
+	}
+}
+
+function hideOnFilter ()
+{
+	if (!$('#filterColumn').is(':checked'))
+		return;
+
+	var column = $('#filterColumnId').val();
+	var columnIdx = $('#filterColumnId').prop("selectedIndex");
+	var min = 0;
+	var max = 100;
+	if ($('#filterScoresRangeCheck').is(':checked'))
+	{
+		min = $( "#slider" ).slider( "values", 0 );
+		max = $( "#slider" ).slider( "values", 1 );
+	}
+	if ($('#hideAlmostCorrect').is(':checked') && max >= 94.99)
+		max = 94.99;
+	if ($('#hideCorrect').is(':checked') && max > 99.99)
+		max = 99.99;
+		
+	for(i=0; i<scores.length; i++)
+	{
+		var s = scores[i][1][columnIdx];
+		if (s < min || s > max)
+			$("#" + scores[i][0]).css('display', 'none');
+	}
+}
+
+</script>
+
+</head>
+<body>
+
+<div id="spinner" class="spinner">
+    <img id="img-spinner" src="html/spinner.gif" alt="Loading"/>
+</div>
+
+<h2>Overview</h2>
+This report compares <a href='http://ggasoftware.com/opensource/imago'>Imago OCR</a> application with other applications for molecule image optical character recognition. 
+For each image the testing framework measures execution time and similarity score with a reference 
+molecule file in Molfile format. <a href='http://ggasoftware.com/opensource/indigo'>Indigo toolkit</a> is used to measure molecule similarity. 
+Because different application produces output differently testing framework applies the following rules to standardize molecules:
+<ul>
+<li>Hydrogens are folded.</li>
+<li>If the output contains multiple molecules in SDF format then all of them are merged into a single molecule with several disconnected fragments.</li>
+<li>Both aromatized and dearomatized structures are compared and best score is selected.</li>
+</ul>
+
+Compared versions:
+$VERSIONS$
+
+<h2>Test sets</h2>
+$TOC$
+
+<h2>Summary</h2>
+$SUMMARY$
+
+<h2>Detailed report</h2>
+
+<div>
+	<input type="checkbox" checked id="filterColumn" onclick="onFilter()">Filter</input>
+	<select id="filterColumnId" onchange="onFilterColumnOptions()"> </select>
+	<label class="inline"> scores:</label>
+	<div  style="margin-left:45px;">
+		<input type="checkbox" checked id="filterScoresRangeCheck" onclick="onFilterColumnOptions()">Scores range:</input>
+		<input type="text" id="score-range" disabled="disabled" size="7" />
+		<div id="slider"></div>
+		<br />
+			<input type="checkbox" id="hideAlmostCorrect" onclick="onFilterColumnOptions()">Hide almost correct</input>
+			<input type="checkbox" id="hideCorrect" onclick="onFilterColumnOptions()">Hide correct</input>
+	</div>
+</div>
+<div>
+	<input type="checkbox" id="compareColumns" onclick="onFilter()">Compare </input>
+	<select id="compareColumnId1" onchange="onCompareOptions()"></select>
+	and
+	<select id="compareColumnId2" onchange="onCompareOptions()"></select>
+	versions
+	<br />
+	<div style="margin-left:45px;">
+		<!-- <input type="checkbox" id="hideSame" onclick="onCompare()">Hide with the same molfiles</input> <br /> -->
+		Show
+		<select id="compareShow" onchange="onCompareOptions()">
+			<option value="~">All</option>
+			<option value="<">Better</option>
+			<option value=">">Worse</option>
+			<option value="=">Same</option>
+		</select>
+	</div>
+</div>
+<div>
+	Hide
+	<br />
+	<div id='hideColumnsContainer' style="margin-left:45px;">
+		<input type="checkbox" id="hideReference" onclick="onHideColumns()">reference</input>
+	</div>
+</div>
+		
+<br />
+
+$SCORES$
+
+<br />
+<table style='border:1px solid black;'>
+<tr>
+  <th>color</th>
+  <th>meaning</th>
+</tr>
+<tr>
+  <td class="correct">100</td>
+  <td>correct</td>
+</tr>
+<tr>
+  <td class="almostcorrect">95-99</td>
+  <td>almost correct</td>
+</tr>
+<tr>
+  <td class="inter">60-95</td>
+  <td>intermediate</td>
+</tr>
+<tr>
+  <td class="bad">0-60</td>
+  <td>bad</td>
+</tr>
+
+</table>
+
+<br>
+<a href='http://ggasoftware.com/opensource/imago/'>Imago OCR</a><br>
+<a href='http://ggasoftware.com'>GGA Software Services LLC</a><br>
+
+</body>
+</html>
