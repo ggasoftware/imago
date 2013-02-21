@@ -459,13 +459,13 @@ public class Imago {
          Integer usingVersion = null;
 
          for (int i = minorVersion; i >= 5; i--) {
-            if (Imago.class.getResourceAsStream("/com/ggasoftware/imago/" + path + "10." + i) != null) {
+            if (Imago.class.getResourceAsStream("/com/ggasoftware/imago/" + path + "10." + i + "/libimago_c.dylib") != null) {
                usingVersion = i;
                break;
             }
          }
          if (usingVersion == null) {
-            throw new Error("Mac OS X 10." + minorVersion + " not supported");
+            throw new Error("Imago cannot find native libraries for Mac OS X 10." + minorVersion);  
          }
          path += "10." + usingVersion;
       }
