@@ -8,6 +8,9 @@ import collections
 import glob
 import re
 
+import matplotlib
+import matplotlib.pyplot as plt
+
 from indigo.indigo_renderer import *
 from indigo.indigo import *
 
@@ -298,6 +301,7 @@ groupCount = 0
 class Group:
     def __init__ (self, root):
         self.name = os.path.split(root)[1]
+        self.root = root
         match = re.match('\d*\.\ *(.*)', self.name)
         if match:
             self.name = match.group(1)
@@ -353,12 +357,16 @@ class VersionScore:
         self.count = 0
         self.good_count = 0
         self.almost_good_count = 0
+        self.scores = []
+        self.time_values = []
     def add (self, other):
         self.score_sum += other.score_sum
         self.time_sum += other.time_sum
         self.count += other.count
         self.good_count += other.good_count
         self.almost_good_count += other.almost_good_count
+        self.scores += other.scores
+        self.time_values += other.time_values
 
 class VersionsScore:
     def __init__ (self):
@@ -430,6 +438,7 @@ def getExperimentClass (sim, sim_values, scores):
         
     sim_values.append(sim_value)
     scores.score_sum += sim_value
+    scores.scores.append(sim_value)
     scores.count += 1
         
     return cls
@@ -469,6 +478,7 @@ def generateGroupReport (g, level):
     for subgroup in g.subgroups:
         subdata = generateGroupReport(subgroup, level + 1)
         stat.add(subdata)
+    g.stat = stat
      
     for item in g.items:
         rowHTML = ""
@@ -488,6 +498,7 @@ def generateGroupReport (g, level):
             item_version = item.versions[version]
             
             stat[version].time_sum += item_version.getTime()
+            stat[version].time_values.append(item_version.getTime())
             
             item_mol = None
             cur_molecule = ""
@@ -606,26 +617,6 @@ def generateGroupReport (g, level):
         cnt = version_stat.good_count
         report_data.write("<td class='stat %s'>%d<br /><div class='portion'>%0.2f%%</div></td>\n" % (versions_id[version], cnt, 100.0 * cnt / version_stat.count))
     report_data.write("</tr>\n")
-    
-    if level == 0:
-        # Add lines to summary
-        summary_str.write('<tr>')
-        summary_str.write('<td class="leftheader">%s</td>' % g.name)
-        for version in versions:
-            version_stat = stat[version]
-            cnt = version_stat.good_count
-            summary_str.write("<td class='stat'>%d<br /><div class='portion'>%0.2f%%</div></td>\n" % (cnt, 100.0 * cnt / version_stat.count))
-        summary_str.write("<td class='hspace'></td>")
-        for version in versions:
-            version_stat = stat[version]
-            if version_stat.count != 0:
-                avg_time = "%0.2f" % (version_stat.time_sum / version_stat.count)
-            else:
-                avg_time = "?"
-            
-            summary_str.write("<td class='stat'>%s</td>\n" % (avg_time))
-        summary_str.write("<td class='hspace'></td>")
-        summary_str.write('</tr>')
         
     return stat
 
@@ -645,33 +636,105 @@ def generateTableContent (g, level):
         for sg in g.subgroups:
             generateTableContent(sg, level + 1)
         toc_data.write("</ul>\n")    
+
+def renderHistograms():        
+    print("Rendering histograms...")
+    for g in groups.subgroups:
+        for version in versions:
+            print("  " + g.name + ": " + getVersionName(version))
+            version_stat = g.stat[version]
+            
+            # Scores histogram
+            fig = plt.figure(figsize=(8,5))
+            ax = plt.subplot(111)            
+            
+            dir = os.path.join(out_dir, getVersionName(version), g.root, "histogram_scores.png")
+            
+            n, bins, patches = ax.hist(version_stat.scores, bins=50, range=(0, 100), color='green', alpha=0.75)
+            
+            ax.set_xlabel('Score')
+            ax.set_ylabel('Count')
+            ax.set_xlim(0, 100)
+            ax.grid(True)
+            ax.set_title(g.name + ": " + getVersionName(version) + " scores")
+            
+            plt.savefig(dir, dpi=fig.dpi)
+            
+            version_stat.score_hist = dir
+
+            # Time histogram
+            fig = plt.figure(figsize=(8,5))
+            ax = plt.subplot(111)            
+            
+            dir = os.path.join(out_dir, getVersionName(version), g.root, "histogram_time.png")
+            
+            n, bins, patches = ax.hist(version_stat.time_values, bins=25, color='blue', alpha=0.75)
+            
+            ax.set_xlabel('Execution time')
+            ax.set_ylabel('Count')
+            ax.grid(True)
+            ax.set_title(g.name + ": " + getVersionName(version) + " time")
+            
+            plt.savefig(dir, dpi=fig.dpi)
+            
+            version_stat.time_hist = dir
+    print("  OK")
+def generateSummary():        
+    renderHistograms()
+    
+    summary_str.write("<tr>")
+    summary_str.write("<th></th>")
+    summary_str.write("<th colspan=%d>Correct</th>" % len(versions))
+    summary_str.write("<th class='hspace'></th>")
+    summary_str.write("<th colspan=%d>Average Time</th>" % len(versions))
+    summary_str.write("</tr>")
+
+    summary_str.write("<tr>")
+    summary_str.write("<th></th>")
+    for version in versions:
+        summary_str.write("<th class='vheader'>%s</th>" % getVersionName(version))
+    summary_str.write("<th class='hspace'></th>")
+    for version in versions:
+        summary_str.write("<th class='vheader'>%s</th>" % getVersionName(version))
+    summary_str.write("</tr>")
+    
+    # Add lines to summary
+    for g in groups.subgroups:
+        stat = g.stat
+        summary_str.write('<tr>')
+        summary_str.write('<td class="leftheader">%s</td>' % g.name)
+        for version in versions:
+            version_stat = stat[version]
+            cnt = version_stat.good_count
+            summary_str.write("<td class='stat'><a href='%s' class='histref'>%d</a><br /><div class='portion'>%0.2f%%</div></td>\n" 
+                % (version_stat.score_hist, cnt, 100.0 * cnt / version_stat.count))
+        summary_str.write("<td class='hspace'></td>")
+        for version in versions:
+            version_stat = stat[version]
+            if version_stat.count != 0:
+                avg_time = "%0.2f" % (version_stat.time_sum / version_stat.count)
+            else:
+                avg_time = "?"
+            
+            summary_str.write("<td class='stat'><a href='%s' class='histref'>%s</a></td>\n" % (version_stat.time_hist, avg_time))
+            
+        summary_str.write("<td class='hspace'></td>")
+        summary_str.write('</tr>')
+    
+    summary_str.write("</table>\n")
     
 generateTableContent(groups, 0)
-    
-summary_str.write("<table id='summary'>\n")
-# add summary headers
-summary_str.write("<tr>")
-summary_str.write("<th></th>")
-summary_str.write("<th colspan=%d>Correct</th>" % len(versions))
-summary_str.write("<th class='hspace'></th>")
-summary_str.write("<th colspan=%d>Average Time</th>" % len(versions))
-summary_str.write("</tr>")
 
-summary_str.write("<tr>")
-summary_str.write("<th></th>")
-for version in versions:
-    summary_str.write("<th>%s</th>" % getVersionName(version))
-summary_str.write("<th class='hspace'></th>")
-for version in versions:
-    summary_str.write("<th>%s</th>" % getVersionName(version))
-summary_str.write("</tr>")
+summary_str.write("<table id='summary'>\n")
 
 report_data.write("<table id='scores'>")    
 
 generateGroupReport(groups, -1)
 
 report_data.write("</table>")    
-summary_str.write("</table>\n")
+
+# Generate summary
+generateSummary()
 
 jsVars = StringIO.StringIO()
 jsVars.write("var versionNames = {\n")

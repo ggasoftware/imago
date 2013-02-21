@@ -38,6 +38,11 @@
 
 #summary .leftheader { font-weight:bold; }
 
+#summary th { padding: 3px; }
+#summary td { padding: 3px; padding-right: 6px; text-align:right; }
+#summary .vheader {}
+.histref { text-decoration: none; }
+
 .spinner {
 	position: fixed;
 	top: 50%;
