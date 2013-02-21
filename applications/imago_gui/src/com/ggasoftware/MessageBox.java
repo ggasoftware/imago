@@ -1,14 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * MessageBox.java
+/****************************************************************************
+ * Copyright (C) 2009-2013 GGA Software Services LLC
  *
- * Created on May 13, 2011, 1:35:38 AM
- */
-package com.ggasoftware;
+ * This file is part of Imago OCR project.
+ *
+ * This file may be distributed and/or modified under the terms of the
+ * GNU General Public License version 3 as published by the Free Software
+ * Foundation and appearing in the file LICENSE.GPL included in the
+ * packaging of this file.
+ *
+ * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+ * WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ ***************************************************************************/
+
+ package com.ggasoftware;
 
 import java.awt.Dimension;
 import java.io.IOException;
