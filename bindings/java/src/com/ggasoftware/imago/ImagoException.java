@@ -1,7 +1,7 @@
 /****************************************************************************
- * Copyright (C) 2011 GGA Software Services LLC
+ * Copyright (C) 2009-2013 GGA Software Services LLC
  *
- * This file is part of Imago toolkit.
+ * This file is part of Imago OCR project.
  *
  * This file may be distributed and/or modified under the terms of the
  * GNU General Public License version 3 as published by the Free Software
