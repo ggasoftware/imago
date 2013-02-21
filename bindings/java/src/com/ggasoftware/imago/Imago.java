@@ -465,7 +465,7 @@ public class Imago {
             }
          }
          if (usingVersion == null) {
-            throw new Error("OS version not supported: Mac OS X 10." + minorVersion);  
+            throw new Error("Mac OS X 10." + minorVersion + "not supported");
          }
          path += "10." + usingVersion;
       }
