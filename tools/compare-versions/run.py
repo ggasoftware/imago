@@ -278,7 +278,11 @@ class Item:
                 tmp_subdir_index += 1
                 
         time_before = time.time()
-        ret = subprocess_execute([abs_version, abs_img], outputfile = "log.txt", timeout=60) 
+        cmd = [abs_version, abs_img]
+        if full_version.endswith(".py"):
+            cmd = [sys.executable] + cmd
+
+        ret = subprocess_execute(cmd, outputfile = "log.txt", timeout=60) 
         time_after = time.time()
         
         os.chdir("..")
@@ -350,7 +354,7 @@ def collectGroup (root):
     g = Group(root)
     for item in os.listdir(root):
         name, ext = os.path.splitext(item)
-        if ext.lower() == '.mol' or ext.lower() == '.txt':
+        if ext.lower() == '.mol' or ext.lower() == '.txt' or ext.lower() == '.db':
             continue
         rootitem = os.path.join(root, item)
         if os.path.isdir(rootitem):
