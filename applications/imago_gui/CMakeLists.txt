@@ -6,6 +6,9 @@ include(../../imago-version.cmake)
 
 install(FILES "build/imago-gui.exe" DESTINATION "bin" COMPONENT bin)
 
+install(FILES "../../dist/imago_console.exe" DESTINATION "bin" COMPONENT console)
+
+
 FILE(GLOB EXAMPLES "${CMAKE_CURRENT_SOURCE_DIR}/../../examples/*.*")
 foreach(f ${EXAMPLES})
 	install(FILES "${f}" DESTINATION "examples" COMPONENT examples)
@@ -26,14 +29,18 @@ set(CPACK_NSIS_PACKAGE_NAME "ImagoGUI")
 set(CPACK_PACKAGE_NAME "ImagoGUI")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "ImagoGUI")
 
-set(CPACK_COMPONENTS_ALL bin examples)
+set(CPACK_COMPONENTS_ALL bin examples console)
+
+set(CPACK_COMPONENT_CONSOLE_DISPLAY_NAME "Imago Console Application")
+set(CPACK_COMPONENT_CONSOLE_DESCRIPTION "Imago chemical compounds OCR console application")
 
 set(CPACK_COMPONENT_BIN_DISPLAY_NAME "ImagoGUI Application")
-set(CPACK_COMPONENT_EXAMPLES_DISPLAY_NAME "Examples")
-set(CPACK_COMPONENT_EXAMPLES_DEPENDS bin)
 set(CPACK_COMPONENT_BIN_DESCRIPTION "ImagoGUI chemical compounds OCR application")
+
+set(CPACK_COMPONENT_EXAMPLES_DISPLAY_NAME "Examples")
 set(CPACK_COMPONENT_EXAMPLES_DESCRIPTION "Example pictures and compounds")
-set(CPACK_COMPONENT_BIN_REQUIRED 1)
+
+#set(CPACK_COMPONENT_BIN_REQUIRED 1)
 
 include(CPack)
 
