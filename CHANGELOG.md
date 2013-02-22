@@ -23,7 +23,7 @@ Imago OCR 2.0
 Imago OCR 1.0
 -----------------------
 
-* 28 March 2011*
+*28 March 2011*
 
 * Recognizable Molecule Features
     * Single, double, triple bonds;

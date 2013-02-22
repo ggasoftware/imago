@@ -1,21 +1,15 @@
-This file contains list of third-party modules used by Imago and their copyright notice.
-
-# Third-party modules used in the Imago core library #
-
-## Boost ##
-
+## Third-party modules used in the Imago core library ##
+### Boost ###
 [http://www.boost.org]()
 
 License: [Boost Software License](http://www.boost.org/users/license.html)
 
-## OpenCV ##
-
+### OpenCV ###
 [http://opencv.org]()
 
 License: BSD license 
 
-## picoPNG ##
-
+### picoPNG ###
 This module is used in the core Imago library for PNG image loading and was modified to support fail-safe image loading when some minor parts are corrupted.
 
 License:
@@ -30,33 +24,28 @@ License:
 > 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 > 3. This notice may not be removed or altered from any source distribution.
 
-# Third-party modules for Java applications #
-
-## JNA ##
+## Third-party modules for Java applications ##
+### JNA ###
 For Java bindings JNA library is used: [http://jna.java.net/]()
 
 License: GNU LGPL Version 2.1
 
-## Java Advanced Imaging (JAI) API ##
-
+### Java Advanced Imaging (JAI) API ###
 JAI is used in the Imago OCR Visual Tool.
 
 [http://java.net/projects/jai]()
 
 Part of Java SE SDK.
 
-## PDFRenderer ##
-
+### PDFRenderer ###
 [http://java.net/projects/pdf-renderer]()
 
 License: GNU LGPL Version 2.1
 
-## Launch4j ##
-
+### Launch4j ###
 [http://launch4j.sourceforge.net]()
 
 Launch4j is used for wrapping Imago OCR Visual Tool into executable files on Windows and Mac OS X 
 
 License:
 > This program is free software licensed under the BSD license, the head subproject (the code which is attached to the wrapped jars) is licensed under the MIT license. Launch4j may be used for wrapping closed source, commercial applications.
-
