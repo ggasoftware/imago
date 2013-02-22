@@ -1,5 +1,7 @@
-Imago OCR 2.0 changes
+Imago OCR 2.0
 ----------------------------
+
+*22 February 2013*
 
 * Recognition quality:
     * Added adaptive preliminary filters designed for recognition of low-quality scans or even photos;
@@ -18,8 +20,10 @@ Imago OCR 2.0 changes
     * Updated build system, reduced dependencies list;
     * Fixed a lot of bugs, overall stability is significantly improved, decreased memory consumption. 
 
-Imago OCR version 1.0
+Imago OCR 1.0
 -----------------------
+
+* 28 March 2011*
 
 * Recognizable Molecule Features
     * Single, double, triple bonds;
