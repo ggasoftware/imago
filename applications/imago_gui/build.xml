@@ -95,7 +95,7 @@
         </copy>
         <launch4j>
             <config headerType="gui" outfile="${build}/imago-gui.exe"
-                dontWrapJar="false" jarPath="${build}/imago-gui.jar" customProcName="true">
+                dontWrapJar="false" jarPath="${build}/imago-gui.jar" customProcName="true" icon="${resources}/imago-icon.ico">
                 <jre minVersion="1.6.0">
                 </jre>
                 <splash file="${resources}/splash.bmp"/>
